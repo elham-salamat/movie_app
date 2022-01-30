@@ -1,14 +1,132 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>What is Movie-App</title>
-    </head>
-    <body>
-        <h1>MyFlix</h1>
-        <p>To build the server-side component of a “movies” web application. The web
-            application will provide users with access to information about different
-            movies, directors, and genres. Users will be able to sign up, update their
-            personal information, and create a list of their favorite movies.
-        </p>
-    </body>
-</html>
+# myFlix REST API
+This API provides the users with a list of movies. The users can so have a look on a list of available movies, get all detaild information about a single movie, genre as well as director.
+The users can create an account and update or delete their account. they also have the possibility to make a list of their favorite movies or remove from the favorit list. 
+It includes 4 general url (users, movies, directors, and genres)
+
+                              Description                                                                                                                                                                                            
+###GET    /movies                           
+Description: return a list of all movies  
+query parameters: None
+Request body: None
+Response data: a json representing data of all movies
+response example
+[
+    {
+        "id": 1,
+        "title": "My salinger year",
+        "director": "Philippe Falardeau",
+        "genre": "action"
+    },
+    {
+        "id": 2,
+        "title": "Palmer",
+        "director": "Fisher Stevens",
+        "genre": "comedy"
+    }
+]
+--------------------------------------------                                        
+
+###GET    /movies/:movieId 
+Description: return detailed information about a single movie   
+query parameters: movieId 
+Request body: None
+Response data: a json representing data of selected movie
+response example 
+{
+    "id": 2,
+    "title": "Palmer",
+    "director": "Fisher Stevens",
+    "genre": "comedy"
+}
+--------------------------------------------
+
+###GET    /genres/:genreTitle
+Description: return the description of desired genre   
+query parameters: genreTitle 
+Request body: None
+Response data: a text message including the genreTitle and its description
+response example 
+comedy: Comedy is a story that tells about a series of funny, or comical events, intended to make the audience laugh. It
+is a very open genre, and thus crosses over with many other genres on a frequent basis.
+--------------------------------------------
+
+###GET    /directors/:directorName          
+Description: return detaild information of desired director    
+query parameters: directorName 
+Request body: None
+Response data: a json representing directors info
+response example
+{
+    "id": 3,
+    "fullName": "Asghar Farhadi",
+    "age": 48,
+    "works": [
+        "film1",
+        "film2",
+        "film3",
+        "film4"
+    ]
+}
+--------------------------------------------
+
+###POST   /users                            
+Description: allow the user to register   
+query parameters: None 
+Request body: json {"name": name.value, "age": age.value, "favoriteMovies": []}
+request body example 
+{
+    "name": "aref",
+    "age": 45,
+    "favoriteMovies": []
+}
+Response data: a json of created user including userId as well 
+response example
+{
+    "name": "aref",
+    "age": 45,
+    "favoriteMovies": [],
+    "id": "389b25d6-3dce-42cc-9ce6-0c628f4cb81f"
+}
+
+--------------------------------------------
+
+###DELETE /users/:userId
+Description: allow the user to deregister      
+query parameters: userId
+Request body: None
+Response data: a text message announcing either successful deletion or unsuccess
+response example 
+user 2 was successfully deleted!
+--------------------------------------------
+
+###PUT    /users/:userId
+Description: allow the user to update personal information       
+query parameters: userId
+Request body: json {"name": name.value, "age": age.value}
+request body example 
+{
+    "name": "maryam",
+    "age": 41
+}
+Response data: a json of updated user information
+response example 
+{
+    "id": 2,
+    "name": "maryam",
+    "age": 41,
+    "favoriteMovies": []
+}
+--------------------------------------------
+
+###PUT   /users/:userId/:movieTitle
+Description: allow the user to add/remove a movies to/from his favorite list      
+query parameters: userId, movieTitle
+Request body: None
+Response data: a text message announcing either successful deletion or unsuccess
+response example
+the movie was successfuly deleted from your favoritelist!
+the movie was successfuly added to your favoritelist!
+
+
+
+
