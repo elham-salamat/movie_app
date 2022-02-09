@@ -3,8 +3,10 @@ This API provides the users with a list of movies. The users can so have a look 
 The users can create an account and update or delete their account. they also have the possibility to make a list of their favorite movies or remove from the favorit list. 
 It includes 4 general url (users, movies, directors, and genres)
 
-                              Description                                                                                                                                                                                            
-###GET    /movies                           
+                                                                                                                                                                                                                         
+###GET    /movies  
+Method: movies.find()   
+
 Description: return a list of all movies  
 query parameters: None
 Request body: None
@@ -12,120 +14,266 @@ Response data: a json representing data of all movies
 response example
 [
     {
-        "id": 1,
-        "title": "My salinger year",
-        "director": "Philippe Falardeau",
-        "genre": "action"
+        "Genre": {
+            "Name": "action",
+            "Description": "an Action story is similar to advanture, and the protagonist usually takes a risky turn."
+        },
+        "Directors": {
+            "Name": "Akira Kurosawa",
+            "Bio": "He was a Japanese filmmaker and painter.",
+            "BirthYear": 1910,
+            "DeathYear": 1998
+        },
+        "_id": "62006dd9cd43d9efb51cef33",
+        "Title": "Seven Samurai",
+        "Description": "Seven Samurai is a 1954 Japanese epic samurai drama film",
+        "ReleasedYear": 1954,
+        "Country": "Japan",
+        "ImageUrl": "Seven_Samurai.png",
+        "Featured": true,
+        "Rating": 4.9
     },
     {
-        "id": 2,
-        "title": "Palmer",
-        "director": "Fisher Stevens",
-        "genre": "comedy"
+        "Genre": {
+            "Name": "Thriller",
+            "Description": " A thriller is a story that is usually a mix of fear and excitement."
+        },
+        "Directors": {
+            "Name": "Akira Kurosawa",
+            "Bio": "He was a Japanese filmmaker and painter.",
+            "BirthYear": 1910,
+            "DeathYear": 1998
+        },
+        "_id": "6200707ccd43d9efb51cef34",
+        "Title": "Rashomon",
+        "Description": "Rashomon is a 1950 jidaigeki psychological thriller/crime film.",
+        "ReleasedYear": 1950,
+        "Country": "Japan",
+        "ImageUrl": "Rashomon.png",
+        "Featured": true,
+        "Rating": 4.5
     }
 ]
 --------------------------------------------                                        
 
-###GET    /movies/:movieId 
+###GET    /movies/:title
+Method: Movies.findOne({Title: title})
+
 Description: return detailed information about a single movie   
-query parameters: movieId 
+query parameters: title
 Request body: None
 Response data: a json representing data of selected movie
 response example 
 {
-    "id": 2,
-    "title": "Palmer",
-    "director": "Fisher Stevens",
-    "genre": "comedy"
+    "Genre": {
+        "Name": "Historical",
+        "Description": "A story about a real person or event."
+    },
+    "Directors": {
+        "Name": "Marc Meyers",
+        "Bio": "He is an american feature film director and screenwriter.",
+        "BirthYear": 1984
+    },
+    "_id": "620096283a51a1513a3f8acd",
+    "Title": "If Only",
+    "Description": "It is a romantic fantasy drama film.",
+    "ReleasedYear": 2004,
+    "Country": "United Kingdom",
+    "ImageUrl": "Ifonly.png",
+    "Featured": false,
+    "Rating": 4.7
 }
 --------------------------------------------
 
-###GET    /genres/:genreTitle
+###GET    /genres/:title
+Method: Movies.findOne({'Genre.Name': title})
+
 Description: return the description of desired genre   
-query parameters: genreTitle 
+query parameters: title 
 Request body: None
 Response data: a text message including the genreTitle and its description
 response example 
-comedy: Comedy is a story that tells about a series of funny, or comical events, intended to make the audience laugh. It
-is a very open genre, and thus crosses over with many other genres on a frequent basis.
+Thriller: A thriller is a story that is usually a mix of fear and excitement.
 --------------------------------------------
 
-###GET    /directors/:directorName          
+###GET    /directors/:name  
+Method: Movies.findOne({'Directors.Name': name})       
+
 Description: return detaild information of desired director    
-query parameters: directorName 
+query parameters: name
 Request body: None
 Response data: a json representing directors info
 response example
 {
-    "id": 3,
-    "fullName": "Asghar Farhadi",
-    "age": 48,
-    "works": [
-        "film1",
-        "film2",
-        "film3",
-        "film4"
-    ]
+    "Name": "Marc Meyers",
+    "Bio": "He is a very famous american freature film director and screen writer. Sometime he plays also as an actor.",
+    "BirthYear": 1984,
+    "DeathYear": 2019
 }
 --------------------------------------------
 
-###POST   /users                            
+###POST   /users  
+Method: Users.findOne({Username: req.body.Username}) //to check if the user is already exists!
+        Users.create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday,
+            Nationality: req.body.Nationality
+        })  // to create the new user and add it to database
+
 Description: allow the user to register   
 query parameters: None 
-Request body: json {"name": name.value, "age": age.value, "favoriteMovies": []}
+Request body: json 
+{
+    "Username": Username,
+    "Password": Password,
+    "Email": Email,
+    "Birthday": Birthday,
+    "Nationality": Nationality,
+    "FavoriteMovies": []
+}
+
 request body example 
 {
-    "name": "aref",
-    "age": 45,
-    "favoriteMovies": []
+    "Username": "samin",
+    "Password": 147,
+    "Email": "samin@yahoo.com",
+    "Birthday": "2000/08/15",
+    "Nationality": "US"
 }
+
 Response data: a json of created user including userId as well 
 response example
 {
-    "name": "aref",
-    "age": 45,
-    "favoriteMovies": [],
-    "id": "389b25d6-3dce-42cc-9ce6-0c628f4cb81f"
+    "Username": "samin",
+    "Password": "147",
+    "Email": "samin@yahoo.com",
+    "Birthday": "2000-08-14T22:00:00.000Z",
+    "Nationality": "US",
+    "FavoriteMovies": [],
+    "_id": "62031e7d1f38ee29974a9cfe",
+    "__v": 0
 }
 
 --------------------------------------------
 
-###DELETE /users/:userId
-Description: allow the user to deregister      
-query parameters: userId
-Request body: None
-Response data: a text message announcing either successful deletion or unsuccess
-response example 
-user 2 was successfully deleted!
---------------------------------------------
+###PUT    /users/:username
+Method: Users.findOneAndUpdate({Username: username}, {$set: 
+    {
+        Username: updatedInfo.Username,
+        Password: updatedInfo.Password,
+        Email: updatedInfo.Email,
+        Birthday: updatedInfo.Birthday,
+        Nationality: updatedInfo.Nationality
+    }
+},
+{new: true}, 
+(err, updatedUser) => {
+    //add logic
+});
 
-###PUT    /users/:userId
+
 Description: allow the user to update personal information       
-query parameters: userId
-Request body: json {"name": name.value, "age": age.value}
+query parameters: username
+Request body: json 
+{
+    "Username": Username,
+    "Password": Password,
+    "Email": Email,
+    "Birthday": Birthday,
+    "Nationality": Nationality,
+}
 request body example 
 {
-    "name": "maryam",
-    "age": 41
+    "Username": "ali",
+    "Password": 741,
+    "Email": "samin@yahoo.com",
+    "Birthday": "2005/04/29",
+    "Nationality": "Norvey"
 }
 Response data: a json of updated user information
-response example 
+Response example 
 {
-    "id": 2,
-    "name": "maryam",
-    "age": 41,
-    "favoriteMovies": []
+    "_id": "62031e7d1f38ee29974a9cfe",
+    "Username": "ali",
+    "Password": "741",
+    "Email": "samin@yahoo.com",
+    "Birthday": "2005-04-28T22:00:00.000Z",
+    "Nationality": "Norvey",
+    "FavoriteMovies": [],
+    "__v": 0
 }
 --------------------------------------------
 
-###PUT   /users/:userId/:movieTitle
-Description: allow the user to add/remove a movies to/from his favorite list      
-query parameters: userId, movieTitle
+###POST  /users/:username/:movietitle
+Method: Movies.findOne({Title: movietitle}) //to extract movieID
+        Users.findOneAndUpdate({Username: username}, {
+            $push: {FavoriteMovies: movieId}
+        }, 
+        {new: true},
+        (err, updatedUser) => {
+            //logic
+        });
+
+Description: allow the user to add a movie to his favorite list      
+query parameters: username, movietitle
+Request body: None
+Response data: json including updated infos
+response example
+{
+    "_id": "62031e7d1f38ee29974a9cfe",
+    "Username": "ali",
+    "Password": "741",
+    "Email": "samin@yahoo.com",
+    "Birthday": "2005-04-28T22:00:00.000Z",
+    "Nationality": "Norvey",
+    "FavoriteMovies": [
+        "620072cccd43d9efb51cef35"
+    ],
+    "__v": 0
+}
+--------------------------------------------
+
+###DELETE  /users/:username/:movietitle
+Method: Movies.findOne({Title: movietitle}) //to extract movieID
+        Users.findOneAndUpdate({Username: username}, {
+            $pull: {FavoriteMovies: movieId}
+        }, 
+        {new: true},
+        (err, updatedUser) => {
+            //logic
+        });
+
+Description: allow the user to remove a movie from favorite list      
+query parameters: username, movietitle
+Request body: None
+Response data: json including updated infos
+response example
+{
+    "_id": "62031e7d1f38ee29974a9cfe",
+    "Username": "ali",
+    "Password": "741",
+    "Email": "samin@yahoo.com",
+    "Birthday": "2005-04-28T22:00:00.000Z",
+    "Nationality": "Norvey",
+    "FavoriteMovies": [],
+    "__v": 0
+}
+--------------------------------------------
+
+###DELETE /users/:username
+Model: Users.findOneAndRemove({Username: username})
+
+Description: allow the user to deregister      
+query parameters: username
 Request body: None
 Response data: a text message announcing either successful deletion or unsuccess
-response example
-the movie was successfuly deleted from your favoritelist!
-the movie was successfuly added to your favoritelist!
+response example 
+ali was deleted.
+
+
+
 
 
 
