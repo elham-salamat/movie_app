@@ -155,6 +155,33 @@ response example
     "_id": "62031e7d1f38ee29974a9cfe",
     "__v": 0
 }
+--------------------------------------------
+
+###POST   /login
+Description: allow the registered user to login in order to authenticate him/her       
+query parameters: None
+Request header: json 
+{
+    "Username": Username,
+    "Password": Password
+}
+
+Response data: a json including the infos of registerd user as well as the jwt token
+Response example 
+
+{
+    "user": {
+        "_id": "620450108ad8893e175dc7a4",
+        "Username": "elhami",
+        "Password": "928582101",
+        "Email": "elhami@yahoo.com",
+        "Birthday": "1984-05-23T22:00:00.000Z",
+        "Nationality": "Ge",
+        "FavoriteMovies": [],
+        "__v": 0
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjA0NTAxMDhhZDg4OTNlMTc1ZGM3YTQiLCJVc2VybmFtZSI6ImVsaGFtaSIsIlBhc3N3b3JkIjoiOTI4NTgyMTAxIiwiRW1haWwiOiJlbGhhbWlAeWFob28uY29tIiwiQmlydGhkYXkiOiIxOTg0LTA1LTIzVDIyOjAwOjAwLjAwMFoiLCJOYXRpb25hbGl0eSI6IkdlIiwiRmF2b3JpdGVNb3ZpZXMiOltdLCJfX3YiOjAsImlhdCI6MTY0NDQ1MDc0OSwiZXhwIjoxNjQ1MDU1NTQ5LCJzdWIiOiJlbGhhbWkifQ.u0JJjRAwUfQBpM3_OgC2nhgXqeSymlJkCidPlNEKnkw"
+}
 
 --------------------------------------------
 
@@ -206,10 +233,9 @@ Response example
 }
 --------------------------------------------
 
-###POST  /users/:username/:movietitle
-Method: Movies.findOne({Title: movietitle}) //to extract movieID
-        Users.findOneAndUpdate({Username: username}, {
-            $push: {FavoriteMovies: movieId}
+###POST  /users/:username/:movieid
+Method: Users.findOneAndUpdate({Username: username}, {
+            $push: {FavoriteMovies: movieid}
         }, 
         {new: true},
         (err, updatedUser) => {
@@ -217,7 +243,7 @@ Method: Movies.findOne({Title: movietitle}) //to extract movieID
         });
 
 Description: allow the user to add a movie to his favorite list      
-query parameters: username, movietitle
+query parameters: username, movieid
 Request body: None
 Response data: json including updated infos
 response example
@@ -235,10 +261,9 @@ response example
 }
 --------------------------------------------
 
-###DELETE  /users/:username/:movietitle
-Method: Movies.findOne({Title: movietitle}) //to extract movieID
-        Users.findOneAndUpdate({Username: username}, {
-            $pull: {FavoriteMovies: movieId}
+###DELETE  /users/:username/:movieid
+Method: Users.findOneAndUpdate({Username: username}, {
+            $pull: {FavoriteMovies: movieid}
         }, 
         {new: true},
         (err, updatedUser) => {
@@ -246,7 +271,7 @@ Method: Movies.findOne({Title: movietitle}) //to extract movieID
         });
 
 Description: allow the user to remove a movie from favorite list      
-query parameters: username, movietitle
+query parameters: username, movieid
 Request body: None
 Response data: json including updated infos
 response example
