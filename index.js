@@ -3,17 +3,22 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       uuid = require('uuid'), 
       mongoose = require('mongoose'), 
-      Models = require('./models.js');
+      Models = require('./models.js'), 
+      {check, validationResult} = require('express-validator');
 
 const app = express();
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
+
 mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const cors = require('cors');
+app.use(cors());
 
 let auth = require('./auth')(app);
 
@@ -89,59 +94,87 @@ app.get('/directors/:name', passport.authenticate('jwt', {session: false}), (req
 });
 
 // create a new user
-app.post('/users', (req, res) => {
-    let newUser = req.body;
+app.post('/users', 
+    [
+        check('Username', 'Username is required').isLength({min: 3}),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
 
-    Users.findOne({'Username' : newUser.Username})
-    .then((user) => {
-        if(user) {
-            res.status(400).send('already exists!');
-        } else {
-            Users.create({
-                Username: newUser.Username,
-                Password: newUser.Password,
-                Email: newUser.Email,
-                Birthday: newUser.Birthday,
-                Nationality: newUser.Nationality
-            })
-            .then((user) => {
-                res.status(201).json(user)
-            })
-            .catch((err) => {
-                console.error(err);
-                res.status(500).send('Error: ' + err);
-            })
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+          return res.status(422).json({ errors: errors.array() });
         }
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    });
+
+        let newUser = req.body;
+        let hashedPassword = Users.hashPassword(newUser.Password);
+
+        Users.findOne({'Username' : newUser.Username})
+        .then((user) => {
+            if(user) {
+                res.status(400).send('already exists!');
+            } else {
+                Users.create({
+                    Username: newUser.Username,
+                    Password: hashedPassword,
+                    Email: newUser.Email,
+                    Birthday: newUser.Birthday,
+                    Nationality: newUser.Nationality
+                })
+                .then((user) => {
+                    res.status(201).json(user)
+                })
+                .catch((err) => {
+                    console.error(err);
+                    res.status(500).send('Error: ' + err);
+                })
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
 });
 
 // update user's personal info
-app.put('/users/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
-    const { username } = req.params;
-    let updatedInfo = req.body;
-    
-    Users.findOneAndUpdate({Username: username}, {$set: 
-        {
-            Username: updatedInfo.Username,
-            Password: updatedInfo.Password,
-            Email: updatedInfo.Email,
-            Birthday: updatedInfo.Birthday,
-            Nationality: updatedInfo.Nationality
+app.put('/users/:username', 
+    passport.authenticate('jwt', {session: false}),
+    [
+        check('Username', 'Username is required').isLength({min: 3}),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
+
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+          return res.status(422).json({ errors: errors.array() });
         }
-    },
-    {new: true}, 
-    (err, updatedUser) => {
-        if(err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
-    });
+
+        const { username } = req.params;
+        let updatedInfo = req.body;
+        
+        Users.findOneAndUpdate({Username: username}, {$set: 
+            {
+                Username: updatedInfo.Username,
+                Password: updatedInfo.Password,
+                Email: updatedInfo.Email,
+                Birthday: updatedInfo.Birthday,
+                Nationality: updatedInfo.Nationality
+            }
+        },
+        {new: true}, 
+        (err, updatedUser) => {
+            if(err) {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            } else {
+                res.json(updatedUser);
+            }
+        });
 });
 
 // add a movie to list of user's favoriteMovies 
@@ -197,4 +230,5 @@ app.delete('/users/:username', passport.authenticate('jwt', {session: false}), (
     });
 });
 
-app.listen(8080, () => console.log('listening to the request on port 8080.'))
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {console.log('listening on Port ' + port ); });
