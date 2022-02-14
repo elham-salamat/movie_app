@@ -27,6 +27,11 @@ let auth = require('./auth')(app);
 const passport = require('passport');
 require('./passport');
 
+// Homepage
+app.get('/', (req, res) => {
+        res.status(200).send('Wlecome to myflix API');
+});
+
 // return a list of all movies
 app.get('/movies', passport.authenticate('jwt', {session: false}), (req, res) => {
     Movies.find()
