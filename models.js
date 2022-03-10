@@ -5,7 +5,7 @@ let movieSchema = mongoose.Schema({
     Title: {type: String, required: true}, 
     Description: {type: String, required: true}, 
     ReleasedYear: Number, 
-    Country: String, 
+    Country: [], 
     Genre: {
         Name: String,
         Description: String
@@ -16,7 +16,7 @@ let movieSchema = mongoose.Schema({
         BirthYear: Number,
         DeathYear: Number
     },
-    ImageUrl: String, 
+    ImagePath: String, 
     Featured: Boolean, 
     Rating: Number
 });
