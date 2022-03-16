@@ -145,6 +145,24 @@ app.post('/users',
         });
 });
 
+// return information of a single user
+app.get('/users/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const { username } = req.params;
+
+    users.findOne({Username: username})
+    .then((user) => {
+        if(!user){
+            res.status(500).send('user not found!');
+        } else {
+            res.status(200).json(user);
+        }
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
 // update user's personal info
 app.put('/users/:username', 
     passport.authenticate('jwt', {session: false}),

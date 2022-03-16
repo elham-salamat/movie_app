@@ -185,6 +185,26 @@ Response example
 
 --------------------------------------------
 
+###GET    /users/:username
+Method: Users.findOne({Username: username})
+
+Description: return detailed information about a specific user   
+query parameters: username
+Request body: None
+Response data: a json representing data of desired user
+Response example 
+{
+    "_id": "62031e7d1f38ee29974a9cfe",
+    "Username": "ali",
+    "Password": "741",
+    "Email": "samin@yahoo.com",
+    "Birthday": "2005-04-28T22:00:00.000Z",
+    "Nationality": "Norvey",
+    "FavoriteMovies": [],
+    "__v": 0
+}
+----------------------------------------
+
 ###PUT    /users/:username
 Method: Users.findOneAndUpdate({Username: username}, {$set: 
     {
