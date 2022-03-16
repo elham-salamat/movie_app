@@ -149,7 +149,7 @@ app.post('/users',
 app.get('/users/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
     const { username } = req.params;
 
-    users.findOne({Username: username})
+    Users.findOne({Username: username})
     .then((user) => {
         if(!user){
             res.status(500).send('user not found!');
