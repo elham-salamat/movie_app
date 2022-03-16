@@ -146,9 +146,9 @@ app.post('/users',
 });
 
 // return information of a single user
-app.get('/users/:username', passport.authenticate('jwt', {session: false}), (req, res) => {
-    const { username } = req.params;
-
+app.get('/users', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const username = req.headers['username'];
+    
     Users.findOne({Username: username})
     .then((user) => {
         if(!user){
