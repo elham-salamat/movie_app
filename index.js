@@ -169,7 +169,7 @@ app.put('/users/:username',
     [
         check('Username', 'Username is required').isLength({min: 3}),
         check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-        check('Password', 'Password is required').not().isEmpty(),
+        // check('Password', 'Password is required').not().isEmpty(),
         check('Email', 'Email does not appear to be valid').isEmail()
     ], (req, res) => {
 
@@ -185,7 +185,7 @@ app.put('/users/:username',
         Users.findOneAndUpdate({Username: username}, {$set: 
             {
                 Username: updatedInfo.Username,
-                Password: updatedInfo.Password,
+                // Password: updatedInfo.Password,
                 Email: updatedInfo.Email,
                 Birthday: updatedInfo.Birthday,
                 Nationality: updatedInfo.Nationality
