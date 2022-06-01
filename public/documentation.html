@@ -1,325 +1,328 @@
-# myFlix REST API
-This API provides the users with a list of movies. The users can so have a look on a list of available movies, get all detaild information about a single movie, genre as well as director.
-The users can create an account and update or delete their account. they also have the possibility to make a list of their favorite movies or remove from the favorit list. 
-It includes 4 general url (users, movies, directors, and genres)
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Movie API Documentation</title>
+        <style>
+            p {
+                margin-bottom: 15px;
+            }
 
-                                                                                                                                                                                                                         
-###GET    /movies  
-Method: movies.find()   
+            table {
+                width: 100%;
+                border: 1px solid black;
+            }
 
-Description: return a list of all movies  
-query parameters: None
-Request body: None
-Response data: a json representing data of all movies
-response example
-[
-    {
-        "Genre": {
-            "Name": "action",
-            "Description": "an Action story is similar to advanture, and the protagonist usually takes a risky turn."
-        },
-        "Directors": {
-            "Name": "Akira Kurosawa",
-            "Bio": "He was a Japanese filmmaker and painter.",
-            "BirthYear": 1910,
-            "DeathYear": 1998
-        },
-        "_id": "62006dd9cd43d9efb51cef33",
-        "Title": "Seven Samurai",
-        "Description": "Seven Samurai is a 1954 Japanese epic samurai drama film",
-        "ReleasedYear": 1954,
-        "Country": "Japan",
-        "ImageUrl": "Seven_Samurai.png",
-        "Featured": true,
-        "Rating": 4.9
-    },
-    {
-        "Genre": {
-            "Name": "Thriller",
-            "Description": " A thriller is a story that is usually a mix of fear and excitement."
-        },
-        "Directors": {
-            "Name": "Akira Kurosawa",
-            "Bio": "He was a Japanese filmmaker and painter.",
-            "BirthYear": 1910,
-            "DeathYear": 1998
-        },
-        "_id": "6200707ccd43d9efb51cef34",
-        "Title": "Rashomon",
-        "Description": "Rashomon is a 1950 jidaigeki psychological thriller/crime film.",
-        "ReleasedYear": 1950,
-        "Country": "Japan",
-        "ImageUrl": "Rashomon.png",
-        "Featured": true,
-        "Rating": 4.5
-    }
-]
---------------------------------------------                                        
-
-###GET    /movies/:title
-Method: Movies.findOne({Title: title})
-
-Description: return detailed information about a single movie   
-query parameters: title
-Request body: None
-Response data: a json representing data of selected movie
-response example 
-{
-    "Genre": {
-        "Name": "Historical",
-        "Description": "A story about a real person or event."
-    },
-    "Directors": {
-        "Name": "Marc Meyers",
-        "Bio": "He is an american feature film director and screenwriter.",
-        "BirthYear": 1984
-    },
-    "_id": "620096283a51a1513a3f8acd",
-    "Title": "If Only",
-    "Description": "It is a romantic fantasy drama film.",
-    "ReleasedYear": 2004,
-    "Country": "United Kingdom",
-    "ImageUrl": "Ifonly.png",
-    "Featured": false,
-    "Rating": 4.7
-}
---------------------------------------------
-
-###GET    /genres/:title
-Method: Movies.findOne({'Genre.Name': title})
-
-Description: return the description of desired genre   
-query parameters: title 
-Request body: None
-Response data: a text message including the genreTitle and its description
-response example 
-Thriller: A thriller is a story that is usually a mix of fear and excitement.
---------------------------------------------
-
-###GET    /directors/:name  
-Method: Movies.findOne({'Directors.Name': name})       
-
-Description: return detaild information of desired director    
-query parameters: name
-Request body: None
-Response data: a json representing directors info
-response example
-{
-    "Name": "Marc Meyers",
-    "Bio": "He is a very famous american freature film director and screen writer. Sometime he plays also as an actor.",
-    "BirthYear": 1984,
-    "DeathYear": 2019
-}
---------------------------------------------
-
-###POST   /users  
-Method: Users.findOne({Username: req.body.Username}) //to check if the user is already exists!
-        Users.create({
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday,
-            Nationality: req.body.Nationality
-        })  // to create the new user and add it to database
-
-Description: allow the user to register   
-query parameters: None 
-Request body: json 
-{
-    "Username": Username,
-    "Password": Password,
-    "Email": Email,
-    "Birthday": Birthday,
-    "Nationality": Nationality,
-    "FavoriteMovies": []
-}
-
-request body example 
-{
-    "Username": "samin",
-    "Password": 147,
-    "Email": "samin@yahoo.com",
-    "Birthday": "2000/08/15",
-    "Nationality": "US"
-}
-
-Response data: a json of created user including userId as well 
-response example
-{
-    "Username": "samin",
-    "Password": "147",
-    "Email": "samin@yahoo.com",
-    "Birthday": "2000-08-14T22:00:00.000Z",
-    "Nationality": "US",
-    "FavoriteMovies": [],
-    "_id": "62031e7d1f38ee29974a9cfe",
-    "__v": 0
-}
---------------------------------------------
-
-###POST   /login
-Description: allow the registered user to login in order to authenticate him/her       
-query parameters: None
-Request header: json 
-{
-    "Username": Username,
-    "Password": Password
-}
-
-Response data: a json including the infos of registerd user as well as the jwt token
-Response example 
-
-{
-    "user": {
-        "_id": "620450108ad8893e175dc7a4",
-        "Username": "elhami",
-        "Password": "928582101",
-        "Email": "elhami@yahoo.com",
-        "Birthday": "1984-05-23T22:00:00.000Z",
-        "Nationality": "Ge",
-        "FavoriteMovies": [],
-        "__v": 0
-    },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjA0NTAxMDhhZDg4OTNlMTc1ZGM3YTQiLCJVc2VybmFtZSI6ImVsaGFtaSIsIlBhc3N3b3JkIjoiOTI4NTgyMTAxIiwiRW1haWwiOiJlbGhhbWlAeWFob28uY29tIiwiQmlydGhkYXkiOiIxOTg0LTA1LTIzVDIyOjAwOjAwLjAwMFoiLCJOYXRpb25hbGl0eSI6IkdlIiwiRmF2b3JpdGVNb3ZpZXMiOltdLCJfX3YiOjAsImlhdCI6MTY0NDQ1MDc0OSwiZXhwIjoxNjQ1MDU1NTQ5LCJzdWIiOiJlbGhhbWkifQ.u0JJjRAwUfQBpM3_OgC2nhgXqeSymlJkCidPlNEKnkw"
-}
-
---------------------------------------------
-
-###GET    /users/:username
-Method: Users.findOne({Username: username})
-
-Description: return detailed information about a specific user   
-query parameters: username
-Request body: None
-Response data: a json representing data of desired user
-Response example 
-{
-    "_id": "62031e7d1f38ee29974a9cfe",
-    "Username": "ali",
-    "Password": "741",
-    "Email": "samin@yahoo.com",
-    "Birthday": "2005-04-28T22:00:00.000Z",
-    "Nationality": "Norvey",
-    "FavoriteMovies": [],
-    "__v": 0
-}
-----------------------------------------
-
-###PUT    /users/:username
-Method: Users.findOneAndUpdate({Username: username}, {$set: 
-    {
-        Username: updatedInfo.Username,
-        Password: updatedInfo.Password,
-        Email: updatedInfo.Email,
-        Birthday: updatedInfo.Birthday,
-        Nationality: updatedInfo.Nationality
-    }
-},
-{new: true}, 
-(err, updatedUser) => {
-    //add logic
-});
-
-
-Description: allow the user to update personal information       
-query parameters: username
-Request body: json 
-{
-    "Username": Username,
-    "Password": Password,
-    "Email": Email,
-    "Birthday": Birthday,
-    "Nationality": Nationality,
-}
-request body example 
-{
-    "Username": "ali",
-    "Password": 741,
-    "Email": "samin@yahoo.com",
-    "Birthday": "2005/04/29",
-    "Nationality": "Norvey"
-}
-Response data: a json of updated user information
-Response example 
-{
-    "_id": "62031e7d1f38ee29974a9cfe",
-    "Username": "ali",
-    "Password": "741",
-    "Email": "samin@yahoo.com",
-    "Birthday": "2005-04-28T22:00:00.000Z",
-    "Nationality": "Norvey",
-    "FavoriteMovies": [],
-    "__v": 0
-}
---------------------------------------------
-
-###POST  /users/:username/:movieid
-Method: Users.findOneAndUpdate({Username: username}, {
-            $push: {FavoriteMovies: movieid}
-        }, 
-        {new: true},
-        (err, updatedUser) => {
-            //logic
-        });
-
-Description: allow the user to add a movie to his favorite list      
-query parameters: username, movieid
-Request body: None
-Response data: json including updated infos
-response example
-{
-    "_id": "62031e7d1f38ee29974a9cfe",
-    "Username": "ali",
-    "Password": "741",
-    "Email": "samin@yahoo.com",
-    "Birthday": "2005-04-28T22:00:00.000Z",
-    "Nationality": "Norvey",
-    "FavoriteMovies": [
-        "620072cccd43d9efb51cef35"
-    ],
-    "__v": 0
-}
---------------------------------------------
-
-###DELETE  /users/:username/:movieid
-Method: Users.findOneAndUpdate({Username: username}, {
-            $pull: {FavoriteMovies: movieid}
-        }, 
-        {new: true},
-        (err, updatedUser) => {
-            //logic
-        });
-
-Description: allow the user to remove a movie from favorite list      
-query parameters: username, movieid
-Request body: None
-Response data: json including updated infos
-response example
-{
-    "_id": "62031e7d1f38ee29974a9cfe",
-    "Username": "ali",
-    "Password": "741",
-    "Email": "samin@yahoo.com",
-    "Birthday": "2005-04-28T22:00:00.000Z",
-    "Nationality": "Norvey",
-    "FavoriteMovies": [],
-    "__v": 0
-}
---------------------------------------------
-
-###DELETE /users/:username
-Model: Users.findOneAndRemove({Username: username})
-
-Description: allow the user to deregister      
-query parameters: username
-Request body: None
-Response data: a text message announcing either successful deletion or unsuccess
-response example 
-ali was deleted.
-
-
-
-
-
-
-
+            th, 
+            td {
+                border: 1px solid black;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Movies Application</h1>
+        <p>
+            This is the server-side component of a "movies" web application. <br>
+            This API provides the users with a list of movies. <br>
+            The users can so have a look on a list of available movies, get all detaild information about a single movie, genre as well as director.<br>
+            The users can create an account and update or delete their account. they also have the possibility to make a list of their favorite movies or remove from the favorit list.<br>
+            It includes 4 general url (users, movies, directors, and genres)           
+        </p>
+        <h3>Endpoints and all related information you need to know</h3>
+        <br>
+        <table>
+            <tr>
+                <th>Method</th>
+                <th>URL</th>
+                <th>Client request</th>
+                <th>Request</th>
+                <th>Response</th>
+            </tr>
+            <tr>
+                <th>GET</th>
+                <th>/movies</th>
+                <th>a list of all movies</th>
+                <th>
+                    query parameters:&nbsp;none<br>
+                    request body:&nbsp;none
+                </th>
+                <th>
+                    response body:&nbsp;a json representing data of all movies.&nbsp;example:<br>
+                    [<br>
+                        {<br>
+                            "Genre": {<br>
+                                "Name": "action",<br>
+                                "Description": "an Action story is similar to advanture, and the protagonist usually takes a risky turn."<br>
+                            },<br>
+                            "Directors": {<br>
+                                "Name": "Akira Kurosawa",<br>
+                                "Bio": "He was a Japanese filmmaker and painter.",<br>
+                                "BirthYear": 1910,<br>
+                                "DeathYear": 1998<br>
+                            },<br>
+                            "_id": "62006dd9cd43d9efb51cef33",<br>
+                            "Title": "Seven Samurai",<br>
+                            "Description": "Seven Samurai is a 1954 Japanese epic samurai drama film",<br>
+                            "ReleasedYear": 1954,<br>
+                            "Country": "Japan",<br>
+                            "ImageUrl": "Seven_Samurai.png",<br>
+                            "Featured": true,<br>
+                            "Rating": 4.9<br>
+                        },<br>
+                        {<br>
+                            "Genre": {<br>
+                                "Name": "Thriller",<br>
+                                "Description": " A thriller is a story that is usually a mix of fear and excitement."<br>
+                            },<br>
+                            "Directors": {<br>
+                                "Name": "Akira Kurosawa",<br>
+                                "Bio": "He was a Japanese filmmaker and painter.",<br>
+                                "BirthYear": 1910,<br>
+                                "DeathYear": 1998<br>
+                            },<br>
+                            "_id": "6200707ccd43d9efb51cef34",<br>
+                            "Title": "Rashomon",<br>
+                            "Description": "Rashomon is a 1950 jidaigeki psychological thriller/crime film.",<br>
+                            "ReleasedYear": 1950,<br>
+                            "Country": "Japan",<br>
+                            "ImageUrl": "Rashomon.png",<br>
+                            "Featured": true,<br>
+                            "Rating": 4.5<br>
+                        }<br>
+                    ]
+                </th>
+            </tr>
+            <tr>
+                <th>GET</th>
+                <th>/movies/:title</th>
+                <th>detailed information about a single movie</th>
+                <th>
+                    query parameters:&nbsp;none<br>
+                    request body:&nbsp;none
+                </th>
+                <th>
+                    response body:&nbsp;a json representing data of selected movie.&nbsp;example:<br> 
+                    {<br>
+                        "Genre": {<br>
+                            "Name": "Historical",<br>
+                            "Description": "A story about a real person or event."<br>
+                        },<br>
+                        "Directors": {<br>
+                            "Name": "Marc Meyers",<br>
+                            "Bio": "He is an american feature film director and screenwriter.",<br>
+                            "BirthYear": 1984<br>
+                        },<br>
+                        "_id": "620096283a51a1513a3f8acd",<br>
+                        "Title": "If Only",<br>
+                        "Description": "It is a romantic fantasy drama film.",<br>
+                        "ReleasedYear": 2004,<br>
+                        "Country": "United Kingdom",<br>
+                        "ImageUrl": "Ifonly.png",<br>
+                        "Featured": false,<br>
+                        "Rating": 4.7<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>GET</th>
+                <th>genres/:title</th>
+                <th>the description of desired genre</th>
+                <th>
+                    query parameters:&nbsp;title<br>
+                    request body:&nbsp;none
+                </th>
+                <th>
+                    response body:&nbsp;a text message including the genreTitle and its description.&nbsp;example:<br>
+                    Thriller: A thriller is a story that is usually a mix of fear and excitement.
+                </th>
+            </tr>
+            <tr>
+                <th>GET</th>
+                <th>/directors/:name</th>
+                <th>detaild information of desired director</th>
+                <th>
+                    query parameters:&nbsp;name<br>
+                    request body:&nbsp;none
+                </th>
+                <th>
+                    a json representing directors info.&nbsp;example:<br>
+                    {<br>
+                        "Name": "Marc Meyers",<br>
+                        "Bio": "He is a very famous american freature film director and screen writer. Sometime he plays also as an actor.",<br>
+                        "BirthYear": 1984,<br>
+                        "DeathYear": 2019<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>POST</th>
+                <th>/users</th>
+                <th>allow the user to register</th>
+                <th>
+                    query parameters:&nbsp;none<br>
+                    request body:&nbsp;json.&nbsp;example:<br> 
+                    {<br>
+                        "Username": "samin",<br>
+                        "Password": 147,<br>
+                        "Email": "samin@yahoo.com",<br>
+                        "Birthday": "2000/08/15",<br>
+                        "Nationality": "US"<br>
+                    }
+                </th>
+                <th>
+                    response body:&nbsp;a json of created user including userId as well.&nbsp;example:<br>
+                    {<br>
+                        "Username": "samin",<br>
+                        "Password": "147",<br>
+                        "Email": "samin@yahoo.com",<br>
+                        "Birthday": "2000-08-14T22:00:00.000Z",<br>
+                        "Nationality": "US",<br>
+                        "FavoriteMovies": [],<br>
+                        "_id": "62031e7d1f38ee29974a9cfe",<br>
+                        "__v": 0<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>POST</th>
+                <th>/login</th>
+                <th>allow the registered user to login in order to authenticate him/her</th>
+                <th>
+                    query parameters:&nbsp;none<br>
+                    request header:&nbsp;json<br> 
+                    {<br>
+                        "Username": Username,<br>
+                        "Password": Password<br>
+                    }
+                </th>
+                <th>
+                    response body:&nbsp;a json including the infos of registerd user as well as the jwt token.&nbsp;example:<br>                   
+                    {<br>
+                        "user": {<br>
+                            "_id": "620450108ad8893e175dc7a4",<br>
+                            "Username": "elhami",<br>
+                            "Password": "928582101",<br>
+                            "Email": "elhami@yahoo.com",<br>
+                            "Birthday": "1984-05-23T22:00:00.000Z",<br>
+                            "Nationality": "Ge",<br>
+                            "FavoriteMovies": [],<br>
+                            "__v": 0<br>
+                        },<br>
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjA0NTAxMDhhZDg4OTNlMTc1ZGM3YTQiNEKnkw"<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>GET</th>
+                <th>/users/:username</th>
+                <th>detailed information about a specific user </th>
+                <th>
+                    query parameters:&nbsp;username<br>
+                    request body:&nbsp;none<br> 
+                </th>
+                <th>
+                    esponse body:&nbsp;a json representing data of desired user.&nbsp;example:<br>
+                    {<br>
+                        "_id": "62031e7d1f38ee29974a9cfe",<br>
+                        "Username": "ali",<br>
+                        "Password": "741",<br>
+                        "Email": "samin@yahoo.com",<br>
+                        "Birthday": "2005-04-28T22:00:00.000Z",<br>
+                        "Nationality": "Norvey",<br>
+                        "FavoriteMovies": [],<br>
+                        "__v": 0<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>PUT</th>
+                <th>/users/:username</th>
+                <th>allow the user to update personal information</th>
+                <th>
+                    query parameters:&nbsp;username<br>
+                    request body:&nbsp;json.&nbsp;example:<br> 
+                    {<br>
+                        "Username": "ali",<br>
+                        "Password": 741,<br>
+                        "Email": "samin@yahoo.com",<br>
+                        "Birthday": "2005/04/29",<br>
+                        "Nationality": "Norvey"<br>
+                    }
+                </th>
+                <th>
+                    response body:&nbsp;a json of updated user information.&nbsp;example:<br>
+                    {<br>
+                        "_id": "62031e7d1f38ee29974a9cfe",<br>
+                        "Username": "ali",<br>
+                        "Password": "741",<br>
+                        "Email": "samin@yahoo.com",<br>
+                        "Birthday": "2005-04-28T22:00:00.000Z",<br>
+                        "Nationality": "Norvey",<br>
+                        "FavoriteMovies": [],<br>
+                        "__v": 0<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>POST</th>
+                <th>/users/:username/:movieid</th>
+                <th>allow the user to add a movie to his favorite list</th>
+                <th>
+                    query parameters:&nbsp;username,&nbsp;movieid<br>
+                    request body:&nbsp;none
+                </th>
+                <th>
+                    response body:&nbsp;a json including updated info.&nbsp;example:<br>
+                    {<br>
+                        "_id": "62031e7d1f38ee29974a9cfe",<br>
+                        "Username": "ali",<br>
+                        "Password": "741",<br>
+                        "Email": "samin@yahoo.com",<br>
+                        "Birthday": "2005-04-28T22:00:00.000Z",<br>
+                        "Nationality": "Norvey",<br>
+                        "FavoriteMovies": [<br>
+                            "620072cccd43d9efb51cef35"<br>
+                        ],<br>
+                        "__v": 0<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>DELETE</th>
+                <th>/users/:username/:movieid</th>
+                <th>allow the user to remove a movie from favorite list</th>
+                <th>
+                    query parameters:&nbsp;username,&nbsp;movieid<br>
+                    request body:&nbsp;none
+                </th>
+                <th>
+                    response body:&nbsp;a json including updated info.&nbsp;example:<br>
+                    {<br>
+                        "_id": "62031e7d1f38ee29974a9cfe",<br>
+                        "Username": "ali",<br>
+                        "Password": "741",<br>
+                        "Email": "samin@yahoo.com",<br>
+                        "Birthday": "2005-04-28T22:00:00.000Z",<br>
+                        "Nationality": "Norvey",<br>
+                        "FavoriteMovies": [],<br>
+                        "__v": 0<br>
+                    }
+                </th>
+            </tr>
+            <tr>
+                <th>DELETE</th>
+                <th>/users/:username</th>
+                <th>allow the user to deregister</th>
+                <th>
+                    query parameters:&nbsp;username<br>
+                    request body:&nbsp;none
+                </th>
+                <th>
+                    response body:&nbsp;a text message announcing either successful deletion or unsuccess.&nbsp;example:<br>
+                    ali was deleted.
+                </th>
+            </tr>
+        </table>
+    </body>
+</html>
